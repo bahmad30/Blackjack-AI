@@ -43,4 +43,3 @@ money based on the confidence of each of its picks. My
 other stretch goals would include some sort of reflection
 on the AI's performance, and maybe some more visual and 
 gameplay changes that make the game more playable/aesthetic.
-
