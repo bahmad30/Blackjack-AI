@@ -18,7 +18,7 @@ private:
     // card dimensions for drawing
     float kWidth = 75;
     float kHeight = 105;
-    float kMargin = kWidth/13;
+    float kMargin = kWidth/12;
     
 public:
     /**
