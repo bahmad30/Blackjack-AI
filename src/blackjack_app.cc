@@ -7,7 +7,7 @@ namespace blackjack {
     }
 
     void BlackjackApp::draw() {
-        ci::Color background_color(ci::Color("green"));
+        ci::Color background_color(ci::Color("darkgreen"));
         ci::gl::clear(background_color);
 
         gameplay_.Display();

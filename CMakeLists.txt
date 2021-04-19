@@ -52,9 +52,11 @@ include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
 list(APPEND SOURCE_FILES    src/gameplay.cc
                             src/blackjack_app.cc
-                            src/card.cc)
+                            src/card.cc
+                            src/deck.cc)
 
-list(APPEND TEST_FILES tests/test_gameplay.cc)
+list(APPEND TEST_FILES tests/test_gameplay.cc
+                        tests/test_deck.cc)
 
 ci_make_app(
         APP_NAME        final-project

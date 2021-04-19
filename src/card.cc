@@ -27,6 +27,9 @@ void blackjack::Card::Draw(const glm::vec2& left_top, bool face_up) const {
     ci::gl::color(ci::Color("white"));
     ci::gl::drawSolidRoundedRect(ci::Rectf(vec2(left_top[0], left_top[1]),
                                     vec2(left_top[0] + kWidth, left_top[1] + kHeight)), 10);
+    ci::gl::color(ci::Color("black"));
+    ci::gl::drawStrokedRoundedRect(ci::Rectf(vec2(left_top[0], left_top[1]),
+                                           vec2(left_top[0] + kWidth, left_top[1] + kHeight)), 10);
     ci::gl::color(ci::Color("grey"));
     
     if (!face_up) {

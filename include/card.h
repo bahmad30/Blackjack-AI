@@ -16,8 +16,8 @@ private:
     bool ace_;
     
     // card dimensions for drawing
-    float kWidth = 75;
-    float kHeight = 105;
+    float kWidth = 90;
+    float kHeight = kWidth * 1.4f;
     float kMargin = kWidth/12;
     
 public:
