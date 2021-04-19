@@ -11,7 +11,6 @@ public:
      */
     void Display() const;
     
-    
     /**
      * Updates the positions and velocities of all particles (based on the rules
      * described in the assignment documentation).

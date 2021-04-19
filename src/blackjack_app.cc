@@ -1,6 +1,3 @@
-
-#include <blackjack_app.h>
-
 #include "blackjack_app.h"
 
 namespace blackjack {
@@ -10,7 +7,7 @@ namespace blackjack {
     }
 
     void BlackjackApp::draw() {
-        ci::Color background_color("grey");
+        ci::Color background_color(ci::Color("green"));
         ci::gl::clear(background_color);
 
         gameplay_.Display();

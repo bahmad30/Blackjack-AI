@@ -20,7 +20,7 @@ class BlackjackApp : public ci::app::App {
 
         // TODO: Delete this comment. Feel free to play around with these variables
         
-        const int kWindowSize = 875;
+        const int kWindowSize = 600;
         const int kMargin = 100;
 
     private:
