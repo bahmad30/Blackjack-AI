@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gameplay.h"
+#include "game.h"
 
 namespace blackjack {
     

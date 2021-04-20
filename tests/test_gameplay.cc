@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include <gameplay.h>
+#include <game.h>
 
 using blackjack::Gameplay;
 

@@ -1,5 +1,5 @@
 #include "card.h"
-#include "gameplay.h"
+#include "game.h"
 
 using glm::vec2;
     

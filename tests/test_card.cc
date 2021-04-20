@@ -23,6 +23,24 @@ TEST_CASE("Card constructor") {
         REQUIRE(ace_of_spades.IsFaceCard() == true);
         REQUIRE(ace_of_spades.IsAce() == true);
     }
+    SECTION("Bad card rank") {
+        bool error = false;
+        try {
+            Card bad_rank(14, 'D');
+        } catch (std::invalid_argument &e) {
+            error = true;
+        }
+        REQUIRE(error);
+    }
+    SECTION("Bad card suit") {
+        bool error = false;
+        try {
+            Card bad_suit(7, 'B');
+        } catch (std::invalid_argument &e) {
+            error = true;
+        }
+        REQUIRE(error);
+    }
 }
 
 TEST_CASE("Set ace") {

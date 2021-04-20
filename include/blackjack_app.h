@@ -3,7 +3,7 @@
 #include "Cinder/app/App.h"
 #include "Cinder/app/RendererGl.h"
 #include "Cinder/gl/gl.h"
-#include "gameplay.h"
+#include "game.h"
 
 
 namespace blackjack {
