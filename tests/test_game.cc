@@ -2,11 +2,10 @@
 
 #include <game.h>
 
-using blackjack::Gameplay;
+using blackjack::Game;
 
 TEST_CASE("Gameplay placeholder test") {
-    Gameplay container;
-    container.AdvanceOneFrame();
+    Game game;
     REQUIRE(1 > 0);
 }
 

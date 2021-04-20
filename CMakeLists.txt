@@ -55,7 +55,7 @@ list(APPEND SOURCE_FILES src/game.cc
                             src/card.cc
                             src/deck.cc)
 
-list(APPEND TEST_FILES tests/test_gameplay.cc
+list(APPEND TEST_FILES tests/test_game.cc
                        tests/test_deck.cc
                        tests/test_card.cc)
 

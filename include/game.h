@@ -4,7 +4,7 @@
 
 namespace blackjack {
 
-class Gameplay {
+class Game {
 public:
     /**
      * Displays the container walls and the current positions of the particles.

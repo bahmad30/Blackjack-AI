@@ -18,13 +18,12 @@ class BlackjackApp : public ci::app::App {
         void draw() override;
         void update() override;
 
-        // TODO: Delete this comment. Feel free to play around with these variables
+        // TODO: Add input functions here
         
         const int kWindowSize = 600;
-        const int kMargin = 100;
 
     private:
-        Gameplay gameplay_;
+        Game gameplay_;
 };
 
 }  // namespace blackjack
