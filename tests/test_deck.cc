@@ -1,10 +1,11 @@
 #include <catch2/catch.hpp>
 #include <deck.h>
 
-
+namespace blackjack {
+    
 TEST_CASE("Deck constructor") {
-    blackjack::Deck deck;
-    std::vector<blackjack::Card> cards = deck.GetCardsInDeck();
+    Deck deck;
+    std::vector<Card> cards = deck.GetCardsInDeck();
     
     SECTION("52 cards") {
         REQUIRE(cards.size() == 52);
@@ -14,7 +15,7 @@ TEST_CASE("Deck constructor") {
     }
     SECTION("Correct ranks") {
         int sum = 0;
-        for (blackjack::Card &card : cards) {
+        for (Card &card : cards) {
             sum += card.GetRank();
         }
         REQUIRE(sum == 364);
@@ -24,7 +25,7 @@ TEST_CASE("Deck constructor") {
         int spades = 0;
         int hearts = 0;
         int clubs = 0;
-        for (blackjack::Card &card : cards) {
+        for (Card &card : cards) {
             if (card.GetSuit() == 'D') {
                 diamonds++;
             } else if (card.GetSuit() == 'S') {
@@ -43,10 +44,10 @@ TEST_CASE("Deck constructor") {
 }
 
 TEST_CASE("Shuffle") {
-    blackjack::Deck deck;
-    std::vector<blackjack::Card> before = deck.GetCardsInDeck();
+    Deck deck;
+    std::vector<Card> before = deck.GetCardsInDeck();
     deck.Shuffle();
-    std::vector<blackjack::Card> after = deck.GetCardsInDeck();
+    std::vector<Card> after = deck.GetCardsInDeck();
 
     SECTION("Cards in different order") {
         bool different_order = false;
@@ -60,12 +61,12 @@ TEST_CASE("Shuffle") {
 }
 
 TEST_CASE("Draw card") {
-    blackjack::Deck deck;
+    Deck deck;
     
     SECTION("Cards in deck loses correct card") {
-        blackjack::Card drawn = deck.DrawCard();
+        Card drawn = deck.DrawCard();
         bool present = false;
-        for (blackjack::Card &card : deck.GetCardsInDeck()) {
+        for (Card &card : deck.GetCardsInDeck()) {
             if (card.GetRank() == drawn.GetRank() && card.GetSuit() == drawn.GetSuit()) {
                 present = true;
             }
@@ -73,9 +74,9 @@ TEST_CASE("Draw card") {
         REQUIRE(!present);
     }
     SECTION("Cards on table gets correct card") {
-        blackjack::Card drawn = deck.DrawCard();
+        Card drawn = deck.DrawCard();
         bool present = false;
-        for (blackjack::Card &card : deck.GetCardsOnTable()) {
+        for (Card &card : deck.GetCardsOnTable()) {
             if (card.GetRank() == drawn.GetRank() && card.GetSuit() == drawn.GetSuit()) {
                 present = true;
             }
@@ -97,17 +98,17 @@ TEST_CASE("Draw card") {
 }
 
 TEST_CASE("Reset") {
-    blackjack::Deck deck;
+    Deck deck;
     deck.DrawCard();
     deck.DrawCard();
-    blackjack::Card drawn1 = deck.GetCardsOnTable()[0];
-    blackjack::Card drawn2 = deck.GetCardsOnTable()[1];
+    Card drawn1 = deck.GetCardsOnTable()[0];
+    Card drawn2 = deck.GetCardsOnTable()[1];
     deck.Reset();
 
     SECTION("Correct cards are transferred") {
         bool first_present = false;
         bool second_present = false;
-        for (blackjack::Card &card : deck.GetCardsInDeck()) {
+        for (Card &card : deck.GetCardsInDeck()) {
             if (card.GetRank() == drawn1.GetRank() && card.GetSuit() == drawn1.GetSuit()) {
                 first_present = true;
             } else if (card.GetRank() == drawn2.GetRank() && card.GetSuit() == drawn2.GetSuit()) {
@@ -117,3 +118,6 @@ TEST_CASE("Reset") {
         REQUIRE((first_present && second_present));
     }
 }
+
+
+} // namespace blackjack
