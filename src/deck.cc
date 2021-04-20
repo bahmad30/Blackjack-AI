@@ -3,10 +3,10 @@
 
 blackjack::Deck::Deck() {
     for (size_t rank = 1; rank <= kNumRanks; rank++) {
-        cards_in_deck_.emplace_back(rank, 'D');
-        cards_in_deck_.emplace_back(rank, 'H');
-        cards_in_deck_.emplace_back(rank, 'C');
-        cards_in_deck_.emplace_back(rank, 'S');
+        cards_in_deck_.emplace_back(rank, 'D', false);
+        cards_in_deck_.emplace_back(rank, 'H', false);
+        cards_in_deck_.emplace_back(rank, 'C', false);
+        cards_in_deck_.emplace_back(rank, 'S', false);
     }
     Shuffle();
 }
@@ -16,7 +16,7 @@ void blackjack::Deck::Shuffle() {
 }
 
 void blackjack::Deck::Reset() {
-    for (Card& card : cards_on_table_) {
+    for (Card &card : cards_on_table_) {
         cards_in_deck_.push_back(card);
     }
     cards_on_table_.clear();

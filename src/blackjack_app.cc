@@ -1,20 +1,22 @@
 #include "blackjack_app.h"
 
-namespace blackjack {
 
-    BlackjackApp::BlackjackApp() {
-        ci::app::setWindowSize(kWindowSize, kWindowSize);
-    }
 
-    void BlackjackApp::draw() {
-        ci::Color background_color(ci::Color("darkgreen"));
-        ci::gl::clear(background_color);
+blackjack::BlackjackApp::BlackjackApp() {
+    ci::app::setWindowSize(kWindowSize, kWindowSize);
+    game_ = Game();
+}
 
-        gameplay_.Display();
-    }
+void blackjack::BlackjackApp::draw() {
+    ci::Color background_color(ci::Color("darkgreen"));
+    ci::gl::clear(background_color);
 
-    void BlackjackApp::update() {
-        gameplay_.AdvanceOneFrame();
-    }
+    game_.Display();
+}
+
+/*
+void BlackjackApp::update() {
+    gameplay_.AdvanceOneFrame();
+}
+ */
     
-}  // namespace blackjack

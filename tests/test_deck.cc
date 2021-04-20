@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <deck.h>
+#include "deck.h"
 
 namespace blackjack {
     

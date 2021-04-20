@@ -1,24 +1,24 @@
 #include <catch2/catch.hpp>
-#include <card.h>
+#include "card.h"
 
 namespace blackjack {
 
 TEST_CASE("Card constructor") {
     
     SECTION("Number card") {
-        Card seven_of_diamonds(7, 'D');
+        Card seven_of_diamonds(7, 'D', false);
         REQUIRE(seven_of_diamonds.GetValue() == 7);
         REQUIRE(seven_of_diamonds.IsFaceCard() == false);
         REQUIRE(seven_of_diamonds.IsAce() == false);
     }
     SECTION("Face card") {
-        Card queen_of_hearts(12, 'H');
+        Card queen_of_hearts(12, 'H', false);
         REQUIRE(queen_of_hearts.GetValue() == 10);
         REQUIRE(queen_of_hearts.IsFaceCard() == true);
         REQUIRE(queen_of_hearts.IsAce() == false);
     }
     SECTION("Ace") {
-        Card ace_of_spades(1, 'S');
+        Card ace_of_spades(1, 'S', false);
         REQUIRE(ace_of_spades.GetValue() == 1);
         REQUIRE(ace_of_spades.IsFaceCard() == true);
         REQUIRE(ace_of_spades.IsAce() == true);
@@ -26,7 +26,7 @@ TEST_CASE("Card constructor") {
     SECTION("Bad card rank") {
         bool error = false;
         try {
-            Card bad_rank(14, 'D');
+            Card bad_rank(14, 'D', false);
         } catch (std::invalid_argument &e) {
             error = true;
         }
@@ -35,7 +35,7 @@ TEST_CASE("Card constructor") {
     SECTION("Bad card suit") {
         bool error = false;
         try {
-            Card bad_suit(7, 'B');
+            Card bad_suit(7, 'B', false);
         } catch (std::invalid_argument &e) {
             error = true;
         }
@@ -44,7 +44,7 @@ TEST_CASE("Card constructor") {
 }
 
 TEST_CASE("Set ace") {
-    Card ace(1, 'S');
+    Card ace(1, 'S', false);
     
     SECTION("Set to 11") {
         ace.SetAce(11);
@@ -59,7 +59,7 @@ TEST_CASE("Set ace") {
         REQUIRE_THROWS_AS(ace.SetAce(7), std::invalid_argument);
     }
     SECTION("Bad card (not ace)") {
-        Card non_ace(7, 'D');
+        Card non_ace(7, 'D', false);
         REQUIRE_THROWS_AS(non_ace.SetAce(11), std::invalid_argument);
     }
 }

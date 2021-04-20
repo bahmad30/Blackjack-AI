@@ -5,7 +5,7 @@
 using blackjack::Game;
 
 TEST_CASE("Gameplay placeholder test") {
-    Game game;
+    //Game game;
     REQUIRE(1 > 0);
 }
 

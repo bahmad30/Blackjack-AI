@@ -1,9 +1,10 @@
 #include "card.h"
 
-blackjack::Card::Card(int rank, char suit) {
+blackjack::Card::Card(int rank, char suit, bool face_up) {
     if ((suit == 'D' || suit == 'H' || suit == 'C' || suit == 'S' ) && (rank > 0 && rank < 14)) {
         suit_ = suit;
         rank_ = rank;
+        face_up_ = face_up;
         if (rank == 1) {
             value_ = 1;
             face_card_ = true;
@@ -23,29 +24,29 @@ blackjack::Card::Card(int rank, char suit) {
     }
 }
 
-void blackjack::Card::Draw(const glm::vec2& left_top, bool face_up) const {
+void blackjack::Card::Draw(const glm::vec2 &left_top) const {
     ci::gl::color(ci::Color("white"));
-    ci::gl::drawSolidRoundedRect(ci::Rectf(vec2(left_top[0], left_top[1]),
-                                    vec2(left_top[0] + kWidth, left_top[1] + kHeight)), 10);
+    ci::gl::drawSolidRoundedRect(ci::Rectf(glm::vec2(left_top[0], left_top[1]),
+                                           glm::vec2(left_top[0] + kCardWidth, left_top[1] + kHeight)), 10);
     ci::gl::color(ci::Color("black"));
-    ci::gl::drawStrokedRoundedRect(ci::Rectf(vec2(left_top[0], left_top[1]),
-                                           vec2(left_top[0] + kWidth, left_top[1] + kHeight)), 10);
+    ci::gl::drawStrokedRoundedRect(ci::Rectf(glm::vec2(left_top[0], left_top[1]),
+                                             glm::vec2(left_top[0] + kCardWidth, left_top[1] + kHeight)), 10);
     ci::gl::color(ci::Color("grey"));
     
-    if (!face_up) {
-        ci::gl::drawSolidRect(ci::Rectf(vec2(left_top[0] + kMargin,
-                                             left_top[1] + kMargin),
-                                        vec2(left_top[0] + kWidth - kMargin,
-                                             left_top[1] + kHeight - kMargin)));
-    } else {
+    if (face_up_) {
         DrawFaceUp(left_top);
+    } else {
+        ci::gl::drawSolidRect(ci::Rectf(glm::vec2(left_top[0] + kMargin,
+                                                  left_top[1] + kMargin),
+                                        glm::vec2(left_top[0] + kCardWidth - kMargin,
+                                                  left_top[1] + kHeight - kMargin)));
     }
 }
 
-void blackjack::Card::DrawFaceUp(const vec2& left_top) const {
-    ci::gl::drawStrokedRect(ci::Rectf(vec2(left_top[0] + kMargin,
+void blackjack::Card::DrawFaceUp(const glm::vec2& left_top) const {
+    ci::gl::drawStrokedRect(ci::Rectf(glm::vec2(left_top[0] + kMargin,
                                            left_top[1] + kMargin),
-                                      vec2(left_top[0] + kWidth - kMargin,
+                                      glm::vec2(left_top[0] + kCardWidth - kMargin,
                                            left_top[1] + kHeight - kMargin)));
     // convert rank to A,J,Q,K if needed
     std::string rank;
@@ -67,11 +68,11 @@ void blackjack::Card::DrawFaceUp(const vec2& left_top) const {
     // draw text on card, red if D/H, black otherwise
     if (suit_ == 'D' || suit_ == 'H') {
         ci::gl::drawStringCentered(content,
-                                   vec2(left_top[0] + kWidth/2, left_top[1] + kHeight/2),
+                                   glm::vec2(left_top[0] + kCardWidth / 2, left_top[1] + kHeight / 2),
                                    ci::Color("red"));
     } else {
         ci::gl::drawStringCentered(content,
-                                   vec2(left_top[0] + kWidth/2, left_top[1] + kHeight/2),
+                                   glm::vec2(left_top[0] + kCardWidth / 2, left_top[1] + kHeight / 2),
                                    ci::Color("black"));
     }
 }
@@ -106,4 +107,8 @@ bool blackjack::Card::IsFaceCard() const {
 
 bool blackjack::Card::IsAce() const {
     return ace_;
+}
+
+bool blackjack::Card::IsFaceUp() const {
+    return face_up_;
 }
