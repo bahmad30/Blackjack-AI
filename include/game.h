@@ -13,6 +13,8 @@ private:
     Deck deck_;
     std::vector<Card> dealer_hand_;
     std::vector<Card> player_hand_;
+    int dealer_hand_value_;
+    int player_hand_value_;
     
     
     float kCardWidth = 90;
@@ -39,13 +41,30 @@ public:
      */
     void Display() const;
     
-    void DisplayHand(bool is_dealer) const;
-    
     /**
      * Resets deck, deals cards (1 face up 1 face down for dealer, 2 face up for player)
      */
     void NewRound();
     
+    // self-explanatory getters
+    std::vector<Card> GetDealerHand() const;
+    std::vector<Card> GetPlayerHand() const;
+    int GetDealerHandValue() const;
+    int GetPlayerHandValue() const;
+    
+    
+private:
+    /**
+     * Displays the box, cards, and value corresponding to a hand
+     * @param is_dealer: true if displaying dealer's hand, false for player
+     */
+    void DisplayHand(bool is_dealer) const;
+    
+    /**
+     * Updates the values of player's and dealer's hand.
+     */
+    void UpdateHandValues();
+
     /**
      * Calculates total value of cards in a hand.
      * @param hand of cards

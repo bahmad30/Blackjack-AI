@@ -1,20 +1,38 @@
 #include <catch2/catch.hpp>
-
-#include <game.h>
+#include "game.h"
 
 using blackjack::Game;
 
-TEST_CASE("Gameplay placeholder test") {
-    //Game game;
-    REQUIRE(1 > 0);
+TEST_CASE("Constructor and new round") {
+    Game game = Game();
+    std::vector<blackjack::Card> dealer = game.GetDealerHand();
+    std::vector<blackjack::Card> player = game.GetPlayerHand();
+    
+    SECTION("Dealer hand") {
+        REQUIRE(dealer.size() == 2);
+        REQUIRE((dealer[0].IsFaceUp() == true && dealer[1].IsFaceUp() == false));
+    }
+    SECTION("Player hand") {
+        REQUIRE(player.size() == 2);
+        REQUIRE((player[0].IsFaceUp() == true && player[1].IsFaceUp() == true));
+    }
+    SECTION("Hand values updated") {
+        REQUIRE((game.GetDealerHandValue() != 0 && game.GetDealerHandValue() != 0));
+    }
 }
 
-/*
-TODO: Rename this test file. You'll also need to modify CMakeLists.txt.
-You can (and should) create more test files; this project is too big
-for all tests to be in the same file. Remember that, for each file (foo.cc)
-containing non-trivial code, you should have a corresponding test file
-(foo_test.cc)
-Make sure to add any files that you create to CMakeLists.txt.
-TODO Delete this comment and the placeholder test before submitting your code.
-*/
+TEST_CASE("Calculate/Update hand values") {
+    Game game = Game();
+
+    SECTION("Sum is correct (player hand)") {
+        std::vector<blackjack::Card> dealer = game.GetDealerHand();
+        int expected = dealer[0].GetValue();
+        REQUIRE(expected == game.GetDealerHandValue());
+    }
+    SECTION("Doesn't count face-down cards (dealer hand)") {
+        std::vector<blackjack::Card> player = game.GetPlayerHand();
+        int expected = player[0].GetValue() + player[1].GetValue();
+        REQUIRE(expected == game.GetPlayerHandValue());
+    }
+}
+
