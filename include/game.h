@@ -14,19 +14,45 @@ private:
     std::vector<Card> dealer_hand_;
     std::vector<Card> player_hand_;
     
-public:
-    Game();
     
+    float kCardWidth = 90;
+    float kCardHeight = kCardWidth * 1.4f;
+    float kHCardSpacing = 20;
+    float kVCardSpacing = 20;
+    
+    float kLeftBoxWall = 50;
+    float kDealerBoxTopWall = 100;
+    float kBoxHeight = kCardHeight + (kVCardSpacing * 2);
+    float kPlayerBoxTopWall = kDealerBoxTopWall + kBoxHeight + 150;
+    
+    float kHandValueMargin = 15;
+
+
+public:
     /**
-     * Displays the container walls and the current positions of the particles.
+     * Constructor, initializes deck and calls NewRound()
+     */
+    Game();
+
+    /**
+     * Displays the table state.
      */
     void Display() const;
     
+    void DisplayHand(bool is_dealer) const;
+    
     /**
-     * Updates the positions and velocities of all particles (based on the rules
-     * described in the assignment documentation).
+     * Resets deck, deals cards (1 face up 1 face down for dealer, 2 face up for player)
      */
-    //void AdvanceOneFrame();
+    void NewRound();
+    
+    /**
+     * Calculates total value of cards in a hand.
+     * @param hand of cards
+     * @return sum of card values
+     */
+    static int CalculateHandValue(const std::vector<Card>& hand);
+    
 };
 
 } // namespace blackjack

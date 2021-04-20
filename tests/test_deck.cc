@@ -60,7 +60,7 @@ TEST_CASE("Shuffle") {
     }
 }
 
-TEST_CASE("Draw card") {
+TEST_CASE("Display card") {
     Deck deck;
     
     SECTION("Cards in deck loses correct card") {
@@ -89,7 +89,7 @@ TEST_CASE("Draw card") {
         REQUIRE(deck.GetCardsInDeck().size() == 50);
         REQUIRE(deck.GetCardsOnTable().size() == 2);
     }
-    SECTION("Draw from empty deck") {
+    SECTION("Display from empty deck") {
         while (!deck.GetCardsInDeck().empty()) {
             deck.DrawCard();
         }

@@ -16,11 +16,10 @@ class BlackjackApp : public ci::app::App {
         BlackjackApp();
 
         void draw() override;
-        //void update() override;
 
         // TODO: Add input functions here
         
-        const int kWindowSize = 600;
+        const int kWindowSize = 700;
 
     private:
         Game game_;

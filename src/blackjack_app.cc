@@ -14,9 +14,4 @@ void blackjack::BlackjackApp::draw() {
     game_.Display();
 }
 
-/*
-void BlackjackApp::update() {
-    gameplay_.AdvanceOneFrame();
-}
- */
     

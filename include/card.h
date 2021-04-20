@@ -3,7 +3,6 @@
 
 namespace blackjack {
     
-    
 class Card {
 private:
     // card identities
@@ -18,6 +17,7 @@ private:
     float kCardWidth = 90;
     float kHeight = kCardWidth * 1.4f;
     float kMargin = kCardWidth / 12;
+    float kCornerRadius = 10;
     
 public:
     /**
@@ -33,7 +33,7 @@ public:
      * @param left_top coordinates of card vec2(left, top)
      * @param face_up status of card
      */
-    void Draw(const glm::vec2 &left_top) const;
+    void Display(const glm::vec2 &left_top) const;
     
     /**
      * Allows value of ace to be changed to 1 or 11. 
@@ -41,6 +41,8 @@ public:
      * @param value of new ace
      */
     void SetAce(int value);
+    
+    void Flip();
     
     // self-explanatory getters
     int GetRank() const;
@@ -55,7 +57,7 @@ private:
      * Draws the face-up version of a card.
      * @param left_top coordinates of card vec2(left, top)
      */
-    void DrawFaceUp(const glm::vec2& left_top) const;
+    void DisplayFaceUp(const glm::vec2& left_top) const;
     
 };
 

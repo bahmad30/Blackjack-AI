@@ -19,22 +19,21 @@ blackjack::Card::Card(int rank, char suit, bool face_up) {
             ace_ = false;
         }
     } else {
-        throw std::invalid_argument("Card [rank, suit] is invalid: "
-                                    "[" + std::to_string(rank) + ", " + suit + "]");
+        throw std::invalid_argument("Card rank or suit is invalid: ");
     }
 }
 
-void blackjack::Card::Draw(const glm::vec2 &left_top) const {
+void blackjack::Card::Display(const glm::vec2 &left_top) const {
     ci::gl::color(ci::Color("white"));
     ci::gl::drawSolidRoundedRect(ci::Rectf(glm::vec2(left_top[0], left_top[1]),
-                                           glm::vec2(left_top[0] + kCardWidth, left_top[1] + kHeight)), 10);
+                                           glm::vec2(left_top[0] + kCardWidth, left_top[1] + kHeight)), kCornerRadius);
     ci::gl::color(ci::Color("black"));
     ci::gl::drawStrokedRoundedRect(ci::Rectf(glm::vec2(left_top[0], left_top[1]),
-                                             glm::vec2(left_top[0] + kCardWidth, left_top[1] + kHeight)), 10);
+                                             glm::vec2(left_top[0] + kCardWidth, left_top[1] + kHeight)), kCornerRadius);
     ci::gl::color(ci::Color("grey"));
     
     if (face_up_) {
-        DrawFaceUp(left_top);
+        DisplayFaceUp(left_top);
     } else {
         ci::gl::drawSolidRect(ci::Rectf(glm::vec2(left_top[0] + kMargin,
                                                   left_top[1] + kMargin),
@@ -43,7 +42,7 @@ void blackjack::Card::Draw(const glm::vec2 &left_top) const {
     }
 }
 
-void blackjack::Card::DrawFaceUp(const glm::vec2& left_top) const {
+void blackjack::Card::DisplayFaceUp(const glm::vec2& left_top) const {
     ci::gl::drawStrokedRect(ci::Rectf(glm::vec2(left_top[0] + kMargin,
                                            left_top[1] + kMargin),
                                       glm::vec2(left_top[0] + kCardWidth - kMargin,
@@ -111,4 +110,8 @@ bool blackjack::Card::IsAce() const {
 
 bool blackjack::Card::IsFaceUp() const {
     return face_up_;
+}
+
+void blackjack::Card::Flip() {
+    face_up_ = !face_up_;
 }
