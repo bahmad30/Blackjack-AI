@@ -88,7 +88,7 @@ void blackjack::Card::SetAce(int value) {
     }
 }
 
-int blackjack::Card::GetNumber() const {
+int blackjack::Card::GetRank() const {
     return rank_;
 }
 

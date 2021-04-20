@@ -4,7 +4,7 @@
 
 using blackjack::Gameplay;
 
-TEST_CASE("Placeholder test") {
+TEST_CASE("Gameplay placeholder test") {
     Gameplay container;
     container.AdvanceOneFrame();
     REQUIRE(1 > 0);

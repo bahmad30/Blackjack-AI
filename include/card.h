@@ -44,7 +44,7 @@ public:
     void SetAce(int value);
     
     // self-explanatory getters
-    int GetNumber() const;
+    int GetRank() const;
     char GetSuit() const;
     int GetValue() const;
     bool IsFaceCard() const;
