@@ -88,6 +88,12 @@ void blackjack::Card::SetAce(int value) {
     }
 }
 
+void blackjack::Card::Flip() {
+    face_up_ = !face_up_;
+}
+
+// getters
+
 int blackjack::Card::GetRank() const {
     return rank_;
 }
@@ -110,8 +116,4 @@ bool blackjack::Card::IsAce() const {
 
 bool blackjack::Card::IsFaceUp() const {
     return face_up_;
-}
-
-void blackjack::Card::Flip() {
-    face_up_ = !face_up_;
 }

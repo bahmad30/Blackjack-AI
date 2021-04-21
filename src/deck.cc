@@ -44,4 +44,3 @@ std::vector<blackjack::Card> blackjack::Deck::GetCardsInDeck() const {
 std::vector<blackjack::Card> blackjack::Deck::GetCardsOnTable() const {
     return cards_on_table_;
 }
-

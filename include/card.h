@@ -42,6 +42,9 @@ public:
      */
     void SetAce(int value);
     
+    /**
+     * Flips the face_up_ boolean.
+     */
     void Flip();
     
     // self-explanatory getters
