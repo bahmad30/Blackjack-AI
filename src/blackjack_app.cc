@@ -14,4 +14,9 @@ void blackjack::BlackjackApp::draw() {
     game_.Display();
 }
 
+void blackjack::BlackjackApp::mouseDown(cinder::app::MouseEvent event) {
+    AppBase::mouseDown(event);
+    game_.HandleClick(event.getPos());
+}
+
     

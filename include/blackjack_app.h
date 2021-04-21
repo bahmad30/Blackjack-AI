@@ -16,8 +16,8 @@ class BlackjackApp : public ci::app::App {
         BlackjackApp();
 
         void draw() override;
-
-        // TODO: Add input functions here
+        void mouseDown(ci::app::MouseEvent event) override;
+        
         
         const int kWindowSize = 700;
 

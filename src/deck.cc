@@ -17,6 +17,9 @@ void blackjack::Deck::Shuffle() {
 
 void blackjack::Deck::Reset() {
     for (Card &card : cards_on_table_) {
+        if (card.IsFaceUp()) {
+            card.Flip();
+        }
         cards_in_deck_.push_back(card);
     }
     cards_on_table_.clear();
