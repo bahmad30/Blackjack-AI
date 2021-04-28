@@ -12,7 +12,6 @@ blackjack::Game::Game() {
 void blackjack::Game::NewRound() {
     // reset state
     deck_.Reset();
-    player_bust_ = false;
     dealer_win_ = false;
     player_win_ = false;
     dealer_hand_.clear();
@@ -37,7 +36,7 @@ void blackjack::Game::Display() const {
     DisplayHand(false);
     
     // display buttons and messages
-    if (player_bust_ || dealer_win_) {
+    if (dealer_win_) {
         DisplayMessage(0);
         DisplayButton(2);
     } else if (player_win_) {
@@ -69,25 +68,30 @@ void blackjack::Game::HandleClick(glm::vec2 coordinates) {
                 x < ((kWindowSize / 2) + (kButtonWidth / 2)) &&
                 y >= (kButtonTopWall) && y <= (kButtonTopWall + kButtonHeight)) {
         
-        if (player_bust_ || player_win_ || dealer_win_) {
+        if (player_win_ || dealer_win_) {
             NewRound();
         }
     }
 }
 
 void blackjack::Game::DealerPlay() {
+    // flip face-down card
     dealer_hand_[1].Flip();
     UpdateHandValues();
     
-    while (dealer_hand_value_ < kDealerThreshold) {
+    while (dealer_hand_value_ <= kDealerThreshold) {
+        // draw card and flip
         dealer_hand_.push_back(deck_.DrawCard());
         dealer_hand_[dealer_hand_.size() - 1].Flip();
         UpdateHandValues();
+        // check for ace flip low
+        if (dealer_hand_value_ > kTwentyOne && dealer_has_ace_) {
+            FlipAce(false, 1);
+            UpdateHandValues();
+        }
     }
-    
-    if (dealer_hand_value_ > kTwentyOne) {
-        player_win_ = true;
-    } else if (dealer_hand_value_ > player_hand_value_ || dealer_hand_value_ == 21) {
+    // check who won
+    if ((dealer_hand_value_ > player_hand_value_ && dealer_hand_value_ <= kTwentyOne)) {
         dealer_win_ = true;
     } else {
         player_win_ = true;
@@ -95,15 +99,23 @@ void blackjack::Game::DealerPlay() {
 }
 
 void blackjack::Game::PlayerHit() {
-    if (!player_bust_) {
+    if (!dealer_win_) {
         player_hand_.push_back(deck_.DrawCard());
         player_hand_[player_hand_.size() - 1].Flip();
         UpdateHandValues();
-        
-        if (player_hand_value_ == 21) {
+
+        // check for 21
+        if (player_hand_value_ == kTwentyOne) {
             player_win_ = true;
-        } else if (player_hand_value_ > 21) {
-            player_bust_ = true;
+        }
+        // check for ace flip low
+        if (player_hand_value_ > kTwentyOne && player_has_ace_) {
+            FlipAce(false, 1);
+            UpdateHandValues();
+        }
+        // check for bust
+        if (player_hand_value_ > kTwentyOne) {
+            dealer_win_ = true;
         }
     }
 }
@@ -119,13 +131,13 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
     if (is_dealer) {
         hand = dealer_hand_;
         hand_value = dealer_hand_value_;
+        content = "Dealer hand value: " + std::to_string(hand_value) + " ";
         top_wall = kDealerBoxTopWall;
-        content = "Dealer hand value: ";
     } else {
         hand = player_hand_;
         hand_value = player_hand_value_;
+        content = "Player hand value: " + std::to_string(hand_value) + " ";
         top_wall = kPlayerBoxTopWall;
-        content = "Player hand value: ";
     }
     float box_width = kHCardSpacing + (hand.size() * (kHCardSpacing + kCardWidth));
     auto left_box_wall = float((0.5 * kWindowSize) - (0.5 * box_width));
@@ -139,13 +151,23 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
     ci::gl::drawStrokedRoundedRect(ci::Rectf(vec2(left_box_wall, top_wall),
                                       vec2(left_box_wall + box_width, top_wall + kBoxHeight)), kHCardSpacing);
 
-    // display cards and hand value
+    // display cards
     for (size_t i = 0; i < hand.size(); i++) {
         auto i_f = float(i);
         hand[i].Display(vec2(left_box_wall + (kHCardSpacing * (i_f + 1)) + (kCardWidth * i_f),
                              top_wall + kVCardSpacing));
     }
-    ci::gl::drawStringCentered(content + std::to_string(hand_value),
+    
+    // display hand value
+    if (!(dealer_win_ || player_win_)) {
+        if (is_dealer && dealer_has_ace_) {
+            content += "(soft)";
+        } else if (!is_dealer && player_has_ace_) {
+            content += "(soft)";
+        }
+    }
+    
+    ci::gl::drawStringCentered(content,
                                glm::vec2((kWindowSize / 2), top_wall - kHandValueMargin),
                                ci::Color("white"));
 }
@@ -188,16 +210,16 @@ void blackjack::Game::DisplayMessage(int index) const {
 ci::Color blackjack::Game::ChooseOutlineColor(bool is_dealer) const {
     cinder::Color color = ci::Color("white");
     if (is_dealer) {
-        if (dealer_win_ || player_bust_) {
-            color = ci::Color("blue");
+        if (dealer_win_) {
+            color = kWinColor;
         } else if (player_win_) {
-            color = ci::Color("red");
+            color = kLoseColor;
         }
     } else {
         if (player_win_) {
-            color = ci::Color("blue");
-        } else if (dealer_win_ || player_bust_) {
-            color = ci::Color("red");
+            color = kWinColor;
+        } else if (dealer_win_) {
+            color = kLoseColor;
         }
     }
     return color;
@@ -206,6 +228,18 @@ ci::Color blackjack::Game::ChooseOutlineColor(bool is_dealer) const {
 // update/calculate values
 
 void blackjack::Game::UpdateHandValues() {
+    for (Card &card : dealer_hand_) {
+        if (card.IsAce() && card.IsFaceUp()) {
+            dealer_has_ace_ = true;
+            FlipAce(true, kHighAce);
+        }
+    }
+    for (Card &card : player_hand_) {
+        if (card.IsAce()) {
+            player_has_ace_ = true;
+            FlipAce(false, kHighAce);
+        }
+    }
     dealer_hand_value_ = CalculateHandValue(dealer_hand_);
     player_hand_value_ = CalculateHandValue(player_hand_);
 }
@@ -218,6 +252,22 @@ int blackjack::Game::CalculateHandValue(const std::vector<Card>& hand) {
         }
     }
     return sum;
+}
+
+void blackjack::Game::FlipAce(bool is_dealer, int new_val) {
+    if (is_dealer) {
+        for (Card &card : dealer_hand_) {
+            if (card.IsAce()) {
+                card.SetAce(new_val);
+            }
+        }
+    } else {
+        for (Card &card : player_hand_) {
+            if (card.IsAce()) {
+                card.SetAce(new_val);
+            }
+        }
+    }
 }
 
 // getters

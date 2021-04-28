@@ -12,9 +12,10 @@ private:
     std::vector<Card> player_hand_;
     int dealer_hand_value_{};
     int player_hand_value_{};
-    bool player_bust_{};
     bool dealer_win_{};
     bool player_win_{};
+    bool dealer_has_ace_;
+    bool player_has_ace_;
 
 public:
     /**
@@ -83,7 +84,9 @@ private:
      * @param hand of cards
      * @return sum of card values
      */
-    static int CalculateHandValue(const std::vector<Card>& hand);
+     static int CalculateHandValue(const std::vector<Card>& hand);
+     
+     void FlipAce(bool is_dealer, int new_val);
     
     /**
      * Selects color for box outline based on game state.
@@ -96,6 +99,7 @@ private:
     // constants
     int kDealerThreshold = 17;
     int kTwentyOne = 21;
+    int kHighAce = 11;
     
     float kWindowSize = 700;
 
@@ -117,6 +121,8 @@ private:
     float kTextHeight = kDealerBoxTopWall + kBoxHeight + 45;
     std::vector<std::string> kMessages = {"You lost! \nClick 'NEW ROUND' to try again.",
                                           "You won! \nClick 'NEW ROUND' to play again."};
+    ci::Color kWinColor = "green";
+    ci::Color kLoseColor = "red";
 };
 
 
