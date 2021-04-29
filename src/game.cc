@@ -172,9 +172,7 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
     
     // display hand value
     if (!(dealer_win_ || player_win_)) {
-        if (is_dealer && dealer_has_ace_) {
-            content += "(soft)";
-        } else if (!is_dealer && player_has_ace_) {
+        if ((is_dealer && dealer_has_ace_) || (!is_dealer && player_has_ace_)) {
             content += "(soft)";
         }
     }
@@ -228,13 +226,13 @@ void blackjack::Game::DisplayBet() const {
             std::to_string(payout_).substr(0, std::to_string(payout_).find('.') + 3);
 
     ci::gl::drawString(balance,
-                               glm::vec2(kBetTextSpacing, kBetTextSpacing),
+                               glm::vec2(kBetTextSpacing / 2, kBetTextSpacing),
                                ci::Color("white"));
     ci::gl::drawString(bet,
-                               glm::vec2(kBetTextSpacing, kBetTextSpacing * 2),
+                               glm::vec2(kBetTextSpacing / 2, kBetTextSpacing * 2),
                                ci::Color("red"));
     ci::gl::drawString(payout,
-                               glm::vec2(kBetTextSpacing, kBetTextSpacing * 3),
+                               glm::vec2(kBetTextSpacing / 2, kBetTextSpacing * 3),
                                ci::Color("lightgreen"));
 }
 

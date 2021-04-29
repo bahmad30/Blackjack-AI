@@ -135,7 +135,7 @@ private:
     float kButtonHeight = 60;
     float kButtonSpacing = 100;
     
-    float kBetTextSpacing = 18;
+    float kBetTextSpacing = 20;
 
     float kTextHeight = kDealerBoxTopWall + kBoxHeight + 45;
     std::vector<std::string> kMessages = {"You lost! \nClick 'NEW ROUND' to try again.",
