@@ -14,12 +14,13 @@ private:
     int player_hand_value_{};
     bool dealer_win_{};
     bool player_win_{};
-    bool dealer_has_ace_;
-    bool player_has_ace_;
+    bool dealer_has_ace_{};
+    bool player_has_ace_{};
 
-    float kPayoutMultiplier = 2;
     float balance_ = 100;
-    float bet_ = 10;
+    float kPayoutMultiplier = 2;
+    float kInitialBet = 10;
+    float bet_ = kInitialBet;
     float payout_ = kPayoutMultiplier * bet_;
     
 
@@ -70,6 +71,9 @@ private:
      */
     void DisplayMessage(int index) const;
     
+    /**
+     * Displays the balance, bet, and payout.
+     */
     void DisplayBet() const;
     
     /**
@@ -86,7 +90,7 @@ private:
      * Updates the values of player's and dealer's hand.
      */
     void UpdateHandValues();
-
+    
     /**
      * Calculates total value of cards in a hand.
      * @param hand of cards
@@ -101,12 +105,12 @@ private:
       */
      void FlipAce(bool is_dealer, int new_val);
     
-    /**
-     * Selects color for box outline based on game state.
-     * @param is_dealer: true if dealer, false if player
-     * @return color for outline
-     */
-    ci::Color ChooseOutlineColor(bool is_dealer) const;
+     /**
+      * Selects color for box outline based on game state.
+      * @param is_dealer: true if dealer, false if player
+      * @return color for outline
+      */
+     ci::Color ChooseOutlineColor(bool is_dealer) const;
     
 private:
     // constants

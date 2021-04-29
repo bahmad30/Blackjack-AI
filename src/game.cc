@@ -18,7 +18,7 @@ void blackjack::Game::NewRound() {
     player_hand_.clear();
     dealer_has_ace_ = false;
     player_has_ace_ = false;
-    bet_ = 10;
+    bet_ = kInitialBet;
     
     // deal dealer's cards
     dealer_hand_.push_back(deck_.DrawCard());
@@ -228,13 +228,13 @@ void blackjack::Game::DisplayBet() const {
             std::to_string(payout_).substr(0, std::to_string(payout_).find('.') + 3);
 
     ci::gl::drawString(balance,
-                               glm::vec2(10, kBetTextSpacing),
+                               glm::vec2(kBetTextSpacing, kBetTextSpacing),
                                ci::Color("white"));
     ci::gl::drawString(bet,
-                               glm::vec2(10, kBetTextSpacing * 2),
+                               glm::vec2(kBetTextSpacing, kBetTextSpacing * 2),
                                ci::Color("red"));
     ci::gl::drawString(payout,
-                               glm::vec2(10, kBetTextSpacing * 3),
+                               glm::vec2(kBetTextSpacing, kBetTextSpacing * 3),
                                ci::Color("lightgreen"));
 }
 
