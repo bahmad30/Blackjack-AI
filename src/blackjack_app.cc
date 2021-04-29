@@ -8,7 +8,7 @@ blackjack::BlackjackApp::BlackjackApp() {
 }
 
 void blackjack::BlackjackApp::draw() {
-    ci::Color background_color(ci::Color("darkgreen"));
+    ci::Color background_color(ci::Color("navy"));
     ci::gl::clear(background_color);
     game_.Display();
 }

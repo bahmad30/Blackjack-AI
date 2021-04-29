@@ -16,6 +16,9 @@ void blackjack::Game::NewRound() {
     player_win_ = false;
     dealer_hand_.clear();
     player_hand_.clear();
+    dealer_has_ace_ = false;
+    player_has_ace_ = false;
+    bet_ = 10;
     
     // deal dealer's cards
     dealer_hand_.push_back(deck_.DrawCard());
@@ -31,9 +34,10 @@ void blackjack::Game::NewRound() {
 }
 
 void blackjack::Game::Display() const {
-    // display dealer and player hands
+    // display hands and betting info
     DisplayHand(true);
     DisplayHand(false);
+    DisplayBet();
     
     // display buttons and messages
     if (dealer_win_) {
@@ -57,13 +61,17 @@ void blackjack::Game::HandleClick(glm::vec2 coordinates) {
     if (x >= ((kWindowSize / 2) - (kButtonSpacing / 2) - kButtonWidth) && 
         x <= ((kWindowSize / 2) - (kButtonSpacing / 2)) &&
         y >= (kButtonTopWall) && y <= (kButtonTopWall + kButtonHeight)) {
-        
-        PlayerHit();
+
+        if (!(player_win_ || dealer_win_)) {
+            PlayerHit();
+        }
     } else if (x >= ((kWindowSize / 2) + (kButtonSpacing / 2)) &&
                x <= ((kWindowSize / 2) + (kButtonSpacing / 2) + kButtonWidth) &&
                y >= (kButtonTopWall) && y <= (kButtonTopWall + kButtonHeight)) {
 
-        DealerPlay();
+        if (!(player_win_ || dealer_win_)) {
+            DealerPlay();
+        }
     } else if (x >= ((kWindowSize / 2) - (kButtonWidth / 2)) &&
                 x < ((kWindowSize / 2) + (kButtonWidth / 2)) &&
                 y >= (kButtonTopWall) && y <= (kButtonTopWall + kButtonHeight)) {
@@ -79,7 +87,7 @@ void blackjack::Game::DealerPlay() {
     dealer_hand_[1].Flip();
     UpdateHandValues();
     
-    while (dealer_hand_value_ <= kDealerThreshold) {
+    while (dealer_hand_value_ <= kDealerThreshold || dealer_hand_value_ <= player_hand_value_) {
         // draw card and flip
         dealer_hand_.push_back(deck_.DrawCard());
         dealer_hand_[dealer_hand_.size() - 1].Flip();
@@ -93,8 +101,10 @@ void blackjack::Game::DealerPlay() {
     // check who won
     if ((dealer_hand_value_ > player_hand_value_ && dealer_hand_value_ <= kTwentyOne)) {
         dealer_win_ = true;
+        balance_ -= bet_;
     } else {
         player_win_ = true;
+        balance_ += payout_;
     }
 }
 
@@ -107,6 +117,7 @@ void blackjack::Game::PlayerHit() {
         // check for 21
         if (player_hand_value_ == kTwentyOne) {
             player_win_ = true;
+            balance_ += payout_;
         }
         // check for ace flip low
         if (player_hand_value_ > kTwentyOne && player_has_ace_) {
@@ -116,6 +127,7 @@ void blackjack::Game::PlayerHit() {
         // check for bust
         if (player_hand_value_ > kTwentyOne) {
             dealer_win_ = true;
+            balance_ -= bet_;
         }
     }
 }
@@ -207,8 +219,27 @@ void blackjack::Game::DisplayMessage(int index) const {
                                ci::Color("white"));
 }
 
+void blackjack::Game::DisplayBet() const {
+    std::string balance = "Balance: " + 
+            std::to_string(balance_).substr(0, std::to_string(balance_).find('.') + 3);
+    std::string bet = "Bet: -" + 
+            std::to_string(bet_).substr(0, std::to_string(bet_).find('.') + 3);
+    std::string payout = "Payout: +" + 
+            std::to_string(payout_).substr(0, std::to_string(payout_).find('.') + 3);
+
+    ci::gl::drawString(balance,
+                               glm::vec2(10, kBetTextSpacing),
+                               ci::Color("white"));
+    ci::gl::drawString(bet,
+                               glm::vec2(10, kBetTextSpacing * 2),
+                               ci::Color("red"));
+    ci::gl::drawString(payout,
+                               glm::vec2(10, kBetTextSpacing * 3),
+                               ci::Color("lightgreen"));
+}
+
 ci::Color blackjack::Game::ChooseOutlineColor(bool is_dealer) const {
-    cinder::Color color = ci::Color("white");
+    cinder::Color color = ci::Color("grey");
     if (is_dealer) {
         if (dealer_win_) {
             color = kWinColor;

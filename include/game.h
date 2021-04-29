@@ -17,6 +17,12 @@ private:
     bool dealer_has_ace_;
     bool player_has_ace_;
 
+    float kPayoutMultiplier = 2;
+    float balance_ = 100;
+    float bet_ = 10;
+    float payout_ = kPayoutMultiplier * bet_;
+    
+
 public:
     /**
      * Constructor, initializes deck and calls NewRound.
@@ -64,6 +70,8 @@ private:
      */
     void DisplayMessage(int index) const;
     
+    void DisplayBet() const;
+    
     /**
      * Adds another face-up card to player's hand, updates hand value, checks for bust.
      */
@@ -86,6 +94,11 @@ private:
      */
      static int CalculateHandValue(const std::vector<Card>& hand);
      
+     /**
+      * Changes the value of an ace card.
+      * @param is_dealer true if dealer
+      * @param new_val of ace
+      */
      void FlipAce(bool is_dealer, int new_val);
     
     /**
@@ -117,11 +130,13 @@ private:
     float kButtonWidth = 100;
     float kButtonHeight = 60;
     float kButtonSpacing = 100;
+    
+    float kBetTextSpacing = 18;
 
     float kTextHeight = kDealerBoxTopWall + kBoxHeight + 45;
     std::vector<std::string> kMessages = {"You lost! \nClick 'NEW ROUND' to try again.",
                                           "You won! \nClick 'NEW ROUND' to play again."};
-    ci::Color kWinColor = "green";
+    ci::Color kWinColor = "lightgreen";
     ci::Color kLoseColor = "red";
 };
 
