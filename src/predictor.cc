@@ -1,31 +1,35 @@
 #include "predictor.h"
 
+#include <utility>
 
-blackjack::Predictor::Predictor(Deck& deck, std::vector<Card> &dealer_hand, std::vector<Card> &player_hand, 
-                                int &dealer_hand_value, int &player_hand_value) : 
-                                deck_(deck), dealer_hand_(dealer_hand), player_hand_(player_hand),
+
+blackjack::Predictor::Predictor(Deck deck, std::vector<Card> dealer_hand, std::vector<Card> player_hand, 
+                                int dealer_hand_value, int player_hand_value) : 
+                                deck_(std::move(deck)), dealer_hand_(std::move(dealer_hand)), player_hand_(std::move(player_hand)),
                                 dealer_hand_value_(dealer_hand_value), player_hand_value_(player_hand_value) {}
-
-float blackjack::Predictor::CalculateBustPercentage() const {
-    std::vector<Card> table_cards = deck_.GetCardsOnTable();
+                                
+float blackjack::Predictor::CalculateBustProbability() const {
+    std::vector<Card> deck_cards = deck_.GetCardsInDeck();
     int bust_cards = 0;
+    std::cout<<"Player hand value: "<<std::to_string(player_hand_value_)<<std::endl;
     
-    for (Card &card : table_cards) {
+    for (Card &card : deck_cards) {
         if (player_hand_value_ + card.GetValue() > 21) {
             bust_cards++;
         }
     }
     
-    return (float)bust_cards/table_cards.size();
+    std::cout<<"Bust cards: "<<std::to_string(bust_cards)<<std::endl;
+    std::cout<<"Total cards: "<<std::to_string(deck_cards.size())<<std::endl;
+    return (float)bust_cards/deck_cards.size();
 }
 
-float blackjack::Predictor::GetBustPercentage() const {
-    return CalculateBustPercentage();
+void blackjack::Predictor::Update(Deck deck, std::vector<Card> dealer_hand, std::vector<Card> player_hand, int dealer_hand_value, int player_hand_value) {
+    std::cout<<"----------Updated----------"<<std::endl;
+    deck_ = std::move(deck);
+    dealer_hand_ = std::move(dealer_hand);
+    player_hand_ = std::move(player_hand);
+    dealer_hand_value_ = dealer_hand_value;
+    player_hand_value_ = player_hand_value;
 }
 
-void blackjack::Predictor::Temporary() {
-    dealer_hand_value_ = 0;
-    dealer_hand_ = {};
-    player_hand_ = {};
-}
-                                

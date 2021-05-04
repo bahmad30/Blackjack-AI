@@ -30,7 +30,7 @@ void blackjack::Game::NewRound() {
     player_hand_.push_back(deck_.DrawCard());
     player_hand_[1].Flip();
     
-    UpdateHandValues();
+    UpdateHands();
 }
 
 void blackjack::Game::Display() const {
@@ -38,6 +38,7 @@ void blackjack::Game::Display() const {
     DisplayHand(true);
     DisplayHand(false);
     DisplayBet();
+    DisplayPredictor();
     
     // display buttons and messages
     if (dealer_win_) {
@@ -85,17 +86,17 @@ void blackjack::Game::HandleClick(glm::vec2 coordinates) {
 void blackjack::Game::DealerPlay() {
     // flip face-down card
     dealer_hand_[1].Flip();
-    UpdateHandValues();
+    UpdateHands();
     
     while (dealer_hand_value_ <= kDealerThreshold || dealer_hand_value_ <= player_hand_value_) {
         // draw card and flip
         dealer_hand_.push_back(deck_.DrawCard());
         dealer_hand_[dealer_hand_.size() - 1].Flip();
-        UpdateHandValues();
+        UpdateHands();
         // check for ace flip low
         if (dealer_hand_value_ > kTwentyOne && dealer_has_ace_) {
             FlipAce(false, 1);
-            UpdateHandValues();
+            UpdateHands();
         }
     }
     // check who won
@@ -112,7 +113,7 @@ void blackjack::Game::PlayerHit() {
     if (!dealer_win_) {
         player_hand_.push_back(deck_.DrawCard());
         player_hand_[player_hand_.size() - 1].Flip();
-        UpdateHandValues();
+        UpdateHands();
 
         // check for 21
         if (player_hand_value_ == kTwentyOne) {
@@ -122,7 +123,7 @@ void blackjack::Game::PlayerHit() {
         // check for ace flip low
         if (player_hand_value_ > kTwentyOne && player_has_ace_) {
             FlipAce(false, 1);
-            UpdateHandValues();
+            UpdateHands();
         }
         // check for bust
         if (player_hand_value_ > kTwentyOne) {
@@ -133,6 +134,17 @@ void blackjack::Game::PlayerHit() {
 }
 
 // display helpers
+
+void blackjack::Game::DisplayPredictor() const {
+    float bust_prob = 100 * bust_probability_;
+    std::string content = "Probability of next draw causing player bust: " + 
+            std::to_string(bust_prob).substr(0, std::to_string(bust_prob).find('.')) + "%";
+    
+    ci::gl::drawStringCentered(content,
+                       glm::vec2(kWindowSize / 2, kPredictorTextHeight),
+                       ci::Color("white"));
+    
+}
 
 void blackjack::Game::DisplayHand(bool is_dealer) const {
     // assign variables based on dealer/player
@@ -256,7 +268,8 @@ ci::Color blackjack::Game::ChooseOutlineColor(bool is_dealer) const {
 
 // update/calculate values
 
-void blackjack::Game::UpdateHandValues() {
+void blackjack::Game::UpdateHands() {
+    // check for aces
     for (Card &card : dealer_hand_) {
         if (card.IsAce() && card.IsFaceUp()) {
             dealer_has_ace_ = true;
@@ -269,8 +282,12 @@ void blackjack::Game::UpdateHandValues() {
             FlipAce(false, kHighAce);
         }
     }
+    // update hand values
     dealer_hand_value_ = CalculateHandValue(dealer_hand_);
     player_hand_value_ = CalculateHandValue(player_hand_);
+    // update predictor and bust percentage
+    predictor_.Update(deck_, dealer_hand_, player_hand_, dealer_hand_value_, player_hand_value_);
+    bust_probability_ = predictor_.CalculateBustProbability();
 }
 
 int blackjack::Game::CalculateHandValue(const std::vector<Card>& hand) {

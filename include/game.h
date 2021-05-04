@@ -2,6 +2,7 @@
 
 #include "deck.h"
 #include "card.h"
+#include "predictor.h"
 
 namespace blackjack {
     
@@ -16,6 +17,9 @@ private:
     bool player_win_{};
     bool dealer_has_ace_{};
     bool player_has_ace_{};
+
+    Predictor predictor_ = Predictor({}, {}, {}, 0, 0);
+    float bust_probability_ = 0;
 
     float balance_ = 100;
     float kPayoutMultiplier = 2;
@@ -53,6 +57,8 @@ public:
     int GetPlayerHandValue() const;
     
 private:
+    void DisplayPredictor() const;
+    
     /**
      * Displays the box, cards, and value corresponding to a hand.
      * @param is_dealer: true if displaying dealer's hand, false for player
@@ -89,7 +95,7 @@ private:
     /**
      * Updates the values of player's and dealer's hand.
      */
-    void UpdateHandValues();
+    void UpdateHands();
     
     /**
      * Calculates total value of cards in a hand.
@@ -127,17 +133,19 @@ private:
 
     float kDealerBoxTopWall = 80;
     float kBoxHeight = kCardHeight + (kVCardSpacing * 2);
-    float kPlayerBoxTopWall = kDealerBoxTopWall + kBoxHeight + 100;
+    float kPlayerBoxTopWall = kDealerBoxTopWall + kBoxHeight + 80;
     float kHandValueMargin = 15;
 
-    float kButtonTopWall = kPlayerBoxTopWall + kBoxHeight + 70;
+    float kButtonTopWall = kPlayerBoxTopWall + kBoxHeight + 30;
     float kButtonWidth = 100;
     float kButtonHeight = 60;
     float kButtonSpacing = 100;
     
+    float kPredictorTextHeight = kButtonTopWall + kButtonHeight + 30;
+    
     float kBetTextSpacing = 20;
 
-    float kTextHeight = kDealerBoxTopWall + kBoxHeight + 45;
+    float kTextHeight = ((kDealerBoxTopWall + kBoxHeight + kPlayerBoxTopWall) / 2) - 5;
     std::vector<std::string> kMessages = {"You lost! \nClick 'NEW ROUND' to try again.",
                                           "You won! \nClick 'NEW ROUND' to play again."};
     ci::Color kWinColor = "lightgreen";
