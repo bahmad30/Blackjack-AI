@@ -35,8 +35,6 @@ public:
      */
     int DetermineBestMove() const;
     
-private:
-    
 };
 
 

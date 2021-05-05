@@ -1,5 +1,4 @@
 #include "predictor.h"
-
 #include <utility>
 
 

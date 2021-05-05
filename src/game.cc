@@ -248,10 +248,10 @@ void blackjack::Game::DisplayBet() const {
                                ci::Color("white"));
     ci::gl::drawString(bet,
                                glm::vec2(kBetTextSpacing / 2, kBetTextSpacing * 2),
-                               ci::Color("red"));
+                               ci::Color("white"));
     ci::gl::drawString(payout,
                                glm::vec2(kBetTextSpacing / 2, kBetTextSpacing * 3),
-                               ci::Color("lightgreen"));
+                               ci::Color("white"));
 }
 
 ci::Color blackjack::Game::ChooseOutlineColor(bool is_dealer) const {

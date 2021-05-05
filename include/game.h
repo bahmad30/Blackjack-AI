@@ -134,10 +134,10 @@ private:
 
     float kDealerBoxTopWall = 80;
     float kBoxHeight = kCardHeight + (kVCardSpacing * 2);
-    float kPlayerBoxTopWall = kDealerBoxTopWall + kBoxHeight + 80;
+    float kPlayerBoxTopWall = kDealerBoxTopWall + kBoxHeight + 70;
     float kHandValueMargin = 15;
 
-    float kButtonTopWall = kPlayerBoxTopWall + kBoxHeight + 30;
+    float kButtonTopWall = kPlayerBoxTopWall + kBoxHeight + 40;
     float kButtonWidth = 100;
     float kButtonHeight = 60;
     float kButtonSpacing = 100;
