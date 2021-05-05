@@ -69,4 +69,3 @@ TEST_CASE("Dealer play (player stand)") {
         REQUIRE(game.IsRoundOver() == true);
     }
 }
-
