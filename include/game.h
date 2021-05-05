@@ -50,14 +50,31 @@ public:
      * @param coordinates of click
      */
     void HandleClick(glm::vec2 coordinates);
+
+    /**
+     * Adds another face-up card to player's hand, updates hand value, checks for bust.
+     */
+    void PlayerHit();
+
+    /**
+     * Adds face-up card to dealer's hand until value >= 17.
+     */
+    void DealerPlay();
     
     // self-explanatory getters
+    Deck GetDeck() const;
     std::vector<Card> GetDealerHand() const;
     std::vector<Card> GetPlayerHand() const;
     int GetDealerHandValue() const;
     int GetPlayerHandValue() const;
+    bool IsRoundOver() const;
+    int GetWinner() const; // 0 = no winner, 1 = dealer win, 2 = player win
+    float GetBalance() const;
     
 private:
+    /**
+     * Displays the probability of the next card being a bust and the reccomended move.
+     */
     void DisplayPredictor() const;
     
     /**
@@ -84,16 +101,6 @@ private:
     void DisplayBet() const;
     
     /**
-     * Adds another face-up card to player's hand, updates hand value, checks for bust.
-     */
-    void PlayerHit();
-    
-    /**
-     * Adds face-up card to dealer's hand until value >= 17.
-     */
-    void DealerPlay();
-    
-    /**
      * Updates the values of player's and dealer's hand.
      */
     void UpdateHands();
@@ -103,22 +110,22 @@ private:
      * @param hand of cards
      * @return sum of card values
      */
-     static int CalculateHandValue(const std::vector<Card>& hand);
-     
-     /**
-      * Changes the value of an ace card.
-      * @param is_dealer true if dealer
-      * @param new_val of ace
-      */
-     void SetAce(bool is_dealer, int new_val);
+    static int CalculateHandValue(const std::vector<Card>& hand);
+         
+    /**
+     * Changes the value of an ace card.
+     * @param is_dealer true if dealer
+     * @param new_val of ace
+     */
+    void SetAce(bool is_dealer, int new_val);
     
-     /**
-      * Selects color for box outline based on game state.
-      * @param is_dealer: true if dealer, false if player
-      * @return color for outline
-      */
-     ci::Color ChooseOutlineColor(bool is_dealer) const;
-    
+    /**
+     * Selects color for box outline based on game state.
+     * @param is_dealer: true if dealer, false if player
+     * @return color for outline
+     */
+    ci::Color ChooseOutlineColor(bool is_dealer) const;
+
 private:
     // constants
     int kDealerThreshold = 17;
@@ -147,8 +154,8 @@ private:
     float kBetTextSpacing = 20;
 
     float kTextHeight = ((kDealerBoxTopWall + kBoxHeight + kPlayerBoxTopWall) / 2) - 5;
-    std::vector<std::string> kMessages = {"You lost! \nClick 'NEW ROUND' to try again.",
-                                          "You won! \nClick 'NEW ROUND' to play again."};
+    std::vector<std::string> kMessages = {"You lost! Click 'NEW ROUND' to try again.",
+                                          "You won! Click 'NEW ROUND' to play again."};
     ci::Color kWinColor = "lightgreen";
     ci::Color kLoseColor = "red";
 };

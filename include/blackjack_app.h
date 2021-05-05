@@ -4,6 +4,7 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "game.h"
+#include "simulator.h"
 
 
 namespace blackjack {
@@ -14,6 +15,7 @@ namespace blackjack {
 class BlackjackApp : public ci::app::App {
 private:
     Game game_;
+    Simulator simulator_;
 
     bool home_screen_;
     bool play_screen_;
@@ -36,7 +38,6 @@ private:
     void DisplayBackButton() const;
     void HandleClick(glm::vec2 coordinates);   
     
-public:
     const float kButtonTopWall = kWindowSize / 2;
     const float kButtonWidth = 100;
     const float kButtonHeight = 60;

@@ -5,14 +5,13 @@ blackjack::BlackjackApp::BlackjackApp() {
     ci::app::setWindowSize(kWindowSize, kWindowSize);
     ci::app::getWindow()->setTitle(kTitle);
     game_ = Game();
+    simulator_ = Simulator();
     home_screen_ = true;
     play_screen_ = false;
     simulation_screen_ = false;
 }
 
 void blackjack::BlackjackApp::draw() {
-    
-    
     if (home_screen_) {
         ci::Color background_color(ci::Color("navy"));
         ci::gl::clear(background_color);
@@ -25,7 +24,7 @@ void blackjack::BlackjackApp::draw() {
     } else if (simulation_screen_) {
         ci::Color background_color(ci::Color("navy"));
         ci::gl::clear(background_color);
-        // display sim
+        simulator_.Display();
         DisplayBackButton();
     }
 }
@@ -37,7 +36,7 @@ void blackjack::BlackjackApp::mouseDown(cinder::app::MouseEvent event) {
         game_.HandleClick(event.getPos());
         HandleClick(event.getPos());
     } else if (simulation_screen_) {
-        // sim handle click
+        simulator_.HandleClick(event.getPos());
         HandleClick(event.getPos());
     }
 }

@@ -54,11 +54,13 @@ list(APPEND SOURCE_FILES src/game.cc
                             src/blackjack_app.cc
                             src/card.cc
                             src/deck.cc
-                            src/predictor.cc)
+                            src/predictor.cc
+                            src/simulator.cc)
 
 list(APPEND TEST_FILES tests/test_game.cc
                        tests/test_deck.cc
-                       tests/test_card.cc)
+                       tests/test_card.cc
+                       tests/test_predictor.cc)
 
 ci_make_app(
         APP_NAME        final-project

@@ -190,7 +190,7 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
     }
     
     // display hand value
-    if (!(dealer_win_ || player_win_)) {
+    if (!IsRoundOver()) {
         if ((is_dealer && dealer_soft_) || (!is_dealer && player_soft_)) {
             content += "(soft)";
         }
@@ -353,4 +353,26 @@ int blackjack::Game::GetDealerHandValue() const {
 
 int blackjack::Game::GetPlayerHandValue() const {
     return player_hand_value_;
+}
+
+blackjack::Deck blackjack::Game::GetDeck() const {
+    return deck_;
+}
+
+bool blackjack::Game::IsRoundOver() const {
+    return (player_win_ || dealer_win_);
+}
+
+int blackjack::Game::GetWinner() const {
+    if (dealer_win_) {
+        return 1;
+    } else if (player_win_) {
+        return 2;
+    } else {
+        return 0;
+    }
+}
+
+float blackjack::Game::GetBalance() const {
+    return balance_;
 }
