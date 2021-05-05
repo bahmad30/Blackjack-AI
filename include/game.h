@@ -15,14 +15,12 @@ private:
     int player_hand_value_{};
     bool dealer_win_{};
     bool player_win_{};
-    bool dealer_has_ace_{};
-    bool player_has_ace_{};
-    bool dealer_soft_;
-    bool player_soft_;
-    
+    bool dealer_soft_{};
+    bool player_soft_{};
 
-    Predictor predictor_ = Predictor({}, {}, {}, 0, 0);
+    Predictor predictor_ = Predictor({}, {}, 0, 0);
     float bust_probability_ = 0;
+    int best_move_ = 0;
 
     float balance_ = 100;
     float kPayoutMultiplier = 2;

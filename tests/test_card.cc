@@ -19,7 +19,7 @@ TEST_CASE("Card constructor") {
     }
     SECTION("Ace") {
         Card ace_of_spades(1, 'S', false);
-        REQUIRE(ace_of_spades.GetValue() == 1);
+        REQUIRE(ace_of_spades.GetValue() == 11);
         REQUIRE(ace_of_spades.IsFaceCard() == true);
         REQUIRE(ace_of_spades.IsAce() == true);
     }

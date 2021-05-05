@@ -7,7 +7,6 @@ namespace blackjack {
 class Predictor {
 private:
     Deck deck_;
-    std::vector<Card> dealer_hand_;
     std::vector<Card> player_hand_;
     int dealer_hand_value_;
     int player_hand_value_;
@@ -15,11 +14,14 @@ private:
 public:
     
     /**
-     * Constructor, takes in parameters as references to avoid updating.
+     * Constructor.
      */
-    Predictor(Deck deck, std::vector<Card> dealer_hand, std::vector<Card> player_hand, int dealer_hand_value, int player_hand_value);
+    Predictor(Deck deck, std::vector<Card> player_hand, int dealer_hand_value, int player_hand_value);
     
-    void Update(Deck deck, std::vector<Card> dealer_hand, std::vector<Card> player_hand, int dealer_hand_value, int player_hand_value);
+    /**
+     * Updates the predictor's game state. 
+     */
+    void Update(Deck deck, std::vector<Card> player_hand, int dealer_hand_value, int player_hand_value);
     
     /**
      * Calculates the percentage of drawing a card that puts player total above 21 (bust).
@@ -27,10 +29,13 @@ public:
      */
     float CalculateBustProbability() const;
     
-    // determine recommended move
+    /**
+     * Determines the best move for a player using optimal strategy.
+     * @return 0 for stand, 1 for hit
+     */
+    int DetermineBestMove() const;
     
 private:
-    
     
 };
 

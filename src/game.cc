@@ -16,8 +16,6 @@ void blackjack::Game::NewRound() {
     player_win_ = false;
     dealer_hand_.clear();
     player_hand_.clear();
-    dealer_has_ace_ = false;
-    player_has_ace_ = false;
     dealer_soft_ = false;
     player_soft_ = false;
     bet_ = kInitialBet;
@@ -129,13 +127,29 @@ void blackjack::Game::PlayerHit() {
 // display helpers
 
 void blackjack::Game::DisplayPredictor() const {
-    float bust_prob = 100 * bust_probability_;
-    std::string content = "Probability of next draw causing player bust: " + 
-            std::to_string(bust_prob).substr(0, std::to_string(bust_prob).find('.')) + "%";
     
-    ci::gl::drawStringCentered(content,
-                       glm::vec2(kWindowSize / 2, kPredictorTextHeight),
-                       ci::Color("white"));
+    // display probability
+    float bust_prob = 100 * bust_probability_;
+    ci::gl::drawStringCentered("Probability of next draw causing player bust: ",
+                               glm::vec2(kWindowSize / 2, kPredictorTextHeight),
+                               ci::Color("white"));
+    ci::gl::drawStringCentered(std::to_string(bust_prob).substr(0, std::to_string(bust_prob).find('.')) + "%",
+                               glm::vec2(kWindowSize / 2, kPredictorTextHeight + kBetTextSpacing),
+                               ci::Color("white"));
+    // display recommended move
+    ci::gl::drawStringCentered("Recommended move: ",
+                               glm::vec2(kWindowSize / 2, kPredictorTextHeight + (kBetTextSpacing * 2)),
+                               ci::Color("white"));
+    std::string move_content;
+    if (best_move_ == 0) {
+        ci::gl::drawStringCentered("STAND",
+                                   glm::vec2(kWindowSize / 2, kPredictorTextHeight + (kBetTextSpacing * 3)),
+                                   ci::Color(kLoseColor));
+    } else {
+        ci::gl::drawStringCentered("HIT",
+                                   glm::vec2(kWindowSize / 2, kPredictorTextHeight + (kBetTextSpacing * 3)),
+                                   ci::Color(kWinColor));
+    }
     
 }
 
@@ -157,7 +171,7 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
         top_wall = kPlayerBoxTopWall;
     }
     float box_width = kHCardSpacing + (hand.size() * (kHCardSpacing + kCardWidth));
-    auto left_box_wall = float((0.5 * kWindowSize) - (0.5 * box_width));
+    float left_box_wall = float(0.5 * kWindowSize) - float(0.5 * box_width);
 
     // display box
     if (top_wall == kDealerBoxTopWall) {
@@ -181,7 +195,6 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
             content += "(soft)";
         }
     }
-    
     ci::gl::drawStringCentered(content,
                                glm::vec2((kWindowSize / 2), top_wall - kHandValueMargin),
                                ci::Color("white"));
@@ -269,7 +282,6 @@ void blackjack::Game::UpdateHands() {
     // check dealer ace, set to 1 if 11 pushes above 21
     for (Card &card : dealer_hand_) {
         if (card.IsAce() && card.IsFaceUp()) {
-            dealer_has_ace_ = true;
             dealer_soft_ = true;
             if (card.GetValue() == kHighAce && dealer_hand_value_ > kTwentyOne) {
                 // dealer has face up high ace and total is above  21 -> flip down, update hand value
@@ -282,7 +294,6 @@ void blackjack::Game::UpdateHands() {
     // check for player ace
     for (Card &card : player_hand_) {
         if (card.IsAce()) {
-            player_has_ace_ = true;
             player_soft_ = true;
             
             if (card.GetValue() == kHighAce && player_hand_value_ > kTwentyOne) {
@@ -294,9 +305,10 @@ void blackjack::Game::UpdateHands() {
         }
     }
     
-    // update predictor and bust percentage
-    predictor_.Update(deck_, dealer_hand_, player_hand_, dealer_hand_value_, player_hand_value_);
+    // update predictor, bust percentage, and best move
+    predictor_.Update(deck_, player_hand_, dealer_hand_value_, player_hand_value_);
     bust_probability_ = predictor_.CalculateBustProbability();
+    best_move_ = predictor_.DetermineBestMove();
 }
 
 int blackjack::Game::CalculateHandValue(const std::vector<Card>& hand) {
