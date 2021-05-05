@@ -36,3 +36,37 @@ TEST_CASE("Calculate/Update hand values") {
     }
 }
 
+TEST_CASE("Player hit") {
+    Game game = Game();
+
+    SECTION("Player gets another card") {
+        game.PlayerHit();
+        REQUIRE(game.GetPlayerHand().size() == 3);
+    }
+    SECTION("Player hand value updated") {
+        int before = game.GetPlayerHandValue();
+        game.PlayerHit();
+        int after = game.GetPlayerHandValue();
+        REQUIRE(before < after);
+    }
+}
+
+TEST_CASE("Dealer play (player stand)") {
+    Game game = Game();
+
+    SECTION("Dealer gets another card") {
+        game.DealerPlay();
+        REQUIRE(game.GetPlayerHand().size() >= 2);
+    }
+    SECTION("Dealer hand value updated") {
+        int before = game.GetDealerHandValue();
+        game.DealerPlay();
+        int after = game.GetDealerHandValue();
+        REQUIRE(before < after);
+    }
+    SECTION("Play until win/lose") {
+        game.DealerPlay();
+        REQUIRE(game.IsRoundOver() == true);
+    }
+}
+

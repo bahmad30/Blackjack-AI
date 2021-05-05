@@ -60,7 +60,7 @@ list(APPEND SOURCE_FILES src/game.cc
 list(APPEND TEST_FILES tests/test_game.cc
                        tests/test_deck.cc
                        tests/test_card.cc
-                       tests/test_predictor.cc)
+        tests/test_simulator.cc)
 
 ci_make_app(
         APP_NAME        final-project

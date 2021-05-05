@@ -8,7 +8,7 @@ blackjack::Simulator::Simulator() {
 }
 
 void blackjack::Simulator::RunSimulation(int sims) {
-    std::vector<int> record;
+    record_.clear();
     
     for (size_t round = 0; round < sims; round++) {
         UpdatePredictor();
@@ -23,16 +23,15 @@ void blackjack::Simulator::RunSimulation(int sims) {
         }
         
         if (game_.GetWinner() == 1) {
-            record.emplace_back(0);
+            record_.emplace_back(0);
         } else if (game_.GetWinner() == 2) {
-            record.emplace_back(1);
+            record_.emplace_back(1);
         }
         
         game_.NewRound();
     }
-    rounds_ = sims;
-    profit_ = game_.GetBalance() - profit_;
-    AnalyzeRecord(record);
+    
+    AnalyzeRecord(record_);
 }
 
 void blackjack::Simulator::AnalyzeRecord(const std::vector<int>& record) {
@@ -56,6 +55,8 @@ void blackjack::Simulator::AnalyzeRecord(const std::vector<int>& record) {
         total += 1;
     }
 
+    rounds_ = (int)total;
+    profit_ = game_.GetBalance() - profit_;
     wins_ = (int)wins;
     loses_ = (int)loses;
     win_percentage_ = wins / total;
@@ -177,4 +178,24 @@ void blackjack::Simulator::DisplayBets() const {
 void blackjack::Simulator::UpdatePredictor() {
     predictor_ = Predictor(game_.GetDeck(), game_.GetPlayerHand(),
                            game_.GetDealerHandValue(), game_.GetPlayerHandValue());
+}
+
+int blackjack::Simulator::GetWins() const {
+    return wins_;
+}
+
+int blackjack::Simulator::GetWinStreak() const {
+    return win_streak_;
+}
+
+float blackjack::Simulator::GetWinPercentage() const {
+    return win_percentage_;
+}
+
+int blackjack::Simulator::GetProfit() const {
+    return profit_;
+}
+
+std::vector<int> blackjack::Simulator::GetRecord() const{
+    return record_;
 }
