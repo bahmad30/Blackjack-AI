@@ -11,7 +11,6 @@ blackjack::Predictor::Predictor(Deck deck, std::vector<Card> dealer_hand, std::v
 float blackjack::Predictor::CalculateBustProbability() const {
     std::vector<Card> deck_cards = deck_.GetCardsInDeck();
     int bust_cards = 0;
-    std::cout<<"Player hand value: "<<std::to_string(player_hand_value_)<<std::endl;
     
     for (Card &card : deck_cards) {
         if (player_hand_value_ + card.GetValue() > 21) {
@@ -19,13 +18,10 @@ float blackjack::Predictor::CalculateBustProbability() const {
         }
     }
     
-    std::cout<<"Bust cards: "<<std::to_string(bust_cards)<<std::endl;
-    std::cout<<"Total cards: "<<std::to_string(deck_cards.size())<<std::endl;
     return (float)bust_cards/deck_cards.size();
 }
 
 void blackjack::Predictor::Update(Deck deck, std::vector<Card> dealer_hand, std::vector<Card> player_hand, int dealer_hand_value, int player_hand_value) {
-    std::cout<<"----------Updated----------"<<std::endl;
     deck_ = std::move(deck);
     dealer_hand_ = std::move(dealer_hand);
     player_hand_ = std::move(player_hand);

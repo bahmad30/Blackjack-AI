@@ -18,6 +18,8 @@ void blackjack::Game::NewRound() {
     player_hand_.clear();
     dealer_has_ace_ = false;
     player_has_ace_ = false;
+    dealer_soft_ = false;
+    player_soft_ = false;
     bet_ = kInitialBet;
     
     // deal dealer's cards
@@ -88,17 +90,13 @@ void blackjack::Game::DealerPlay() {
     dealer_hand_[1].Flip();
     UpdateHands();
     
-    while (dealer_hand_value_ <= kDealerThreshold || dealer_hand_value_ <= player_hand_value_) {
+    while (dealer_hand_value_ <= kDealerThreshold || dealer_hand_value_ < player_hand_value_) {
         // draw card and flip
         dealer_hand_.push_back(deck_.DrawCard());
         dealer_hand_[dealer_hand_.size() - 1].Flip();
         UpdateHands();
-        // check for ace flip low
-        if (dealer_hand_value_ > kTwentyOne && dealer_has_ace_) {
-            FlipAce(false, 1);
-            UpdateHands();
-        }
     }
+    
     // check who won
     if ((dealer_hand_value_ > player_hand_value_ && dealer_hand_value_ <= kTwentyOne)) {
         dealer_win_ = true;
@@ -119,11 +117,6 @@ void blackjack::Game::PlayerHit() {
         if (player_hand_value_ == kTwentyOne) {
             player_win_ = true;
             balance_ += payout_;
-        }
-        // check for ace flip low
-        if (player_hand_value_ > kTwentyOne && player_has_ace_) {
-            FlipAce(false, 1);
-            UpdateHands();
         }
         // check for bust
         if (player_hand_value_ > kTwentyOne) {
@@ -184,7 +177,7 @@ void blackjack::Game::DisplayHand(bool is_dealer) const {
     
     // display hand value
     if (!(dealer_win_ || player_win_)) {
-        if ((is_dealer && dealer_has_ace_) || (!is_dealer && player_has_ace_)) {
+        if ((is_dealer && dealer_soft_) || (!is_dealer && player_soft_)) {
             content += "(soft)";
         }
     }
@@ -269,22 +262,38 @@ ci::Color blackjack::Game::ChooseOutlineColor(bool is_dealer) const {
 // update/calculate values
 
 void blackjack::Game::UpdateHands() {
-    // check for aces
-    for (Card &card : dealer_hand_) {
-        if (card.IsAce() && card.IsFaceUp()) {
-            dealer_has_ace_ = true;
-            FlipAce(true, kHighAce);
-        }
-    }
-    for (Card &card : player_hand_) {
-        if (card.IsAce()) {
-            player_has_ace_ = true;
-            FlipAce(false, kHighAce);
-        }
-    }
     // update hand values
     dealer_hand_value_ = CalculateHandValue(dealer_hand_);
     player_hand_value_ = CalculateHandValue(player_hand_);
+    
+    // check dealer ace, set to 1 if 11 pushes above 21
+    for (Card &card : dealer_hand_) {
+        if (card.IsAce() && card.IsFaceUp()) {
+            dealer_has_ace_ = true;
+            dealer_soft_ = true;
+            if (card.GetValue() == kHighAce && dealer_hand_value_ > kTwentyOne) {
+                // dealer has face up high ace and total is above  21 -> flip down, update hand value
+                SetAce(true, 1);
+                dealer_hand_value_ = CalculateHandValue(dealer_hand_);
+                dealer_soft_ = false;
+            }
+        }
+    }
+    // check for player ace
+    for (Card &card : player_hand_) {
+        if (card.IsAce()) {
+            player_has_ace_ = true;
+            player_soft_ = true;
+            
+            if (card.GetValue() == kHighAce && player_hand_value_ > kTwentyOne) {
+                // player has high ace and total is above 21 -> flip down, update hand value
+                SetAce(false, 1);
+                player_hand_value_ = CalculateHandValue(player_hand_);
+                player_soft_ = false;
+            }
+        }
+    }
+    
     // update predictor and bust percentage
     predictor_.Update(deck_, dealer_hand_, player_hand_, dealer_hand_value_, player_hand_value_);
     bust_probability_ = predictor_.CalculateBustProbability();
@@ -300,7 +309,7 @@ int blackjack::Game::CalculateHandValue(const std::vector<Card>& hand) {
     return sum;
 }
 
-void blackjack::Game::FlipAce(bool is_dealer, int new_val) {
+void blackjack::Game::SetAce(bool is_dealer, int new_val) {
     if (is_dealer) {
         for (Card &card : dealer_hand_) {
             if (card.IsAce()) {

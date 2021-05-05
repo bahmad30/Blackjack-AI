@@ -6,7 +6,7 @@ blackjack::Card::Card(int rank, char suit, bool face_up) {
         rank_ = rank;
         face_up_ = face_up;
         if (rank == 1) {
-            value_ = 1;
+            value_ = 11;
             face_card_ = true;
             ace_ = true;
         } else if (rank > 10) {
