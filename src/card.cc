@@ -6,11 +6,11 @@ blackjack::Card::Card(int rank, char suit, bool face_up) {
         rank_ = rank;
         face_up_ = face_up;
         if (rank == 1) {
-            value_ = 1;
+            value_ = kHighAce;
             face_card_ = true;
             ace_ = true;
-        } else if (rank > 10) {
-            value_ = 10;
+        } else if (rank > kFaceCard) {
+            value_ = kFaceCard;
             face_card_ = true;
             ace_ = false;
         } else {
@@ -52,9 +52,9 @@ void blackjack::Card::DisplayFaceUp(const glm::vec2& left_top) const {
     if (ace_) {
         rank = "A";
     } else if (face_card_) {
-        if (rank_ == 11) {
+        if (rank_ == kHighAce) {
             rank = "J";
-        } else if (rank_ == 12) {
+        } else if (rank_ == (kHighAce + 1)) {
             rank = "Q";
         } else {
             rank = "K";
@@ -78,7 +78,7 @@ void blackjack::Card::DisplayFaceUp(const glm::vec2& left_top) const {
 
 void blackjack::Card::SetAce(int value) {
     if (ace_) {
-        if (value == 1 || value == 11) {
+        if (value == 1 || value == kHighAce) {
             value_ = value;
         } else {
             throw std::invalid_argument("Ace cannot be given value: " + std::to_string(value));

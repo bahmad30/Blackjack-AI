@@ -13,11 +13,15 @@ private:
     bool face_card_;
     bool ace_;
     
-    // card dimensions for drawing
+    // constants
     float kCardWidth = 90;
     float kHeight = kCardWidth * 1.4f;
     float kMargin = kCardWidth / 12;
     float kCornerRadius = 10;
+    
+    int kHighAce = 11;
+    int kFaceCard = 10;
+    
     
 public:
     /**
